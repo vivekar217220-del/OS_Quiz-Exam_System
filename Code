@@ -1,0 +1,136 @@
+#Import All Needed Modules.
+import tkinter as tk
+from tkinter import messagebox, simpledialog
+import json
+import os
+
+#Data Setup Part :
+#This creates initial data for:Students (with passwords & score) One admin account Quiz questions.
+DATA_FILE = "data.json"
+
+initial_data = {
+    "students": {
+        "Vivek Chaudhary": {"password": "SRV001", "score": None},
+        "Devansh Patel": {"password": "SRV002", "score": None},
+        "Dhruv Jegoda": {"password": "SRV003", "score": None},
+    },
+    "admin": {"username": "admin", "password": "admin123"},
+    "questions": [
+        {"question": "What is 2 + 2?", "options": ["3", "4", "5", "6"], "answer": "4"},
+        {"question": "Capital of India?", "options": ["Delhi", "Mumbai", "Kolkata", "Chennai"], "answer": "Delhi"},
+        {"question": "Which is a programming language?", "options": ["Python", "Apple", "Car", "Banana"], "answer": "Python"}
+    ]
+}
+
+#Now In Next Part if data.json does not exist → create it with initial_data.
+if not os.path.exists(DATA_FILE):
+    with open(DATA_FILE, "w") as f:
+        json.dump(initial_data, f, indent=4)
+
+#In next step Load and Save Data.
+def load_data():
+    with open(DATA_FILE, "r") as f:
+        return json.load(f)
+
+def save_data(data):
+    with open(DATA_FILE, "w") as f:
+        json.dump(data, f, indent=4)
+
+#in Next Part This is the main class that controls the entire quiz.It initializes the window (400×400).Loads data from data.json. Shows main menu.
+class QuizApp:
+    def __init__(self, root): #here At init part at both side we do a double Underscore Otherwise It is not runnable.
+        self.root = root
+        self.root.title("Quiz/Exam System")
+        self.root.geometry("400x400")
+        self.data = load_data()
+        self.create_main_menu()
+
+#Next is Main Menu Shows 3 buttons: 1. Student Login  2. Student Register  3. Admin Login
+def create_main_menu(self):
+    for widget in self.root.winfo_children():
+        widget.destroy() #Here it delets a Old Screen Items.
+    tk.Label(...).pack()
+    tk.Button(..., command=self.student_login)
+    tk.Button(..., command=self.student_register)
+    tk.Button(..., command=self.admin_login)
+# Next is Student Login Part Checks if student name & password match in JSON data. If yes → start quiz. If not → show error.
+def student_login(self):
+    name = simpledialog.askstring("Login", "Enter your name:")
+    password = simpledialog.askstring("Login", "Enter password:")
+    if name in self.data["students"] and self.data["students"][name]["password"] == password:
+        messagebox.showinfo("Login Successful", f"Welcome, {name}")
+        self.start_quiz(name)
+    else:
+        messagebox.showerror("Error", "Invalid name or password")
+
+#now in next is Students Register If student not in data → asks password → saves to file. Then shows success message.
+def student_register(self):
+    name = simpledialog.askstring("Register", "Enter your full name:")
+    ... # It's Called Elipsis And it's mean is i am still writing a code continued code means .
+
+#Now in next Admin Login 
+def admin_login(self):
+    username = simpledialog.askstring("Admin", "Enter admin username:")
+    password = simpledialog.askstring("Admin", "Enter admin password:")
+    ...
+#Now next is Admin Panel where we see a three options as a Admin : View results, Edit quiz questions, Logout.
+def admin_panel(self):
+    tk.Button(..., command=self.view_results)
+    tk.Button(..., command=self.edit_questions)
+
+#Now in Next part Of view Results Shows all student scores in a message box.
+def view_results(self):
+    results = ""
+    for name, info in self.data["students"].items():
+        results += f"{name}: {info['score'] if info['score'] else 'Not Attempted'}\n"
+    messagebox.showinfo("Student Results", results)
+
+#Now in next Part is Edit a Questions Displays each question with an Edit button.
+def edit_questions(self):
+    for i, q in enumerate(self.data["questions"]):
+        tk.Label(...).pack()
+        tk.Button(..., command=lambda i=i: self.edit_single_question(i))
+#Lets admin rewrite any question and its options.
+def edit_single_question(self, index):
+    question = simpledialog.askstring("Edit", "Enter new question:")
+    ...
+    self.data["questions"][index] = {...}
+    save_data(self.data)
+
+#Now next is Students Quiz Start Quiz For Logged Students .
+def start_quiz(self, student_name):
+    self.student_name = student_name
+    self.score = 0
+    self.q_index = 0
+    self.show_question()
+
+#Now next Is Displays The Questions.
+def show_question(self):
+    if self.q_index >= len(self.data["questions"]):
+        self.finish_quiz()
+        return
+    q = self.data["questions"][self.q_index]
+    tk.Radiobutton(... for each option ...)
+
+#Now in next it shows next Question. If answer correct → add 1 score. Then go to next question.
+def next_question(self):
+    selected = self.var.get()
+    if selected == self.data["questions"][self.q_index]["answer"]:
+        self.score += 1
+    self.q_index += 1
+    self.show_question()
+#Now in next is Finish Quiz. Shows final score and saves it to JSON file.
+def finish_quiz(self):
+    messagebox.showinfo("Quiz Complete", f"Your score: {self.score}/...")
+    self.data["students"][self.student_name]["score"] = self.score
+    save_data(self.data)
+    self.create_main_menu()
+
+#Now last Step is Run the App.
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = QuizApp(root)
+    root.mainloop()
+
+
+
